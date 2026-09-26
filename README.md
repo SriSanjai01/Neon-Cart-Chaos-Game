@@ -1,6 +1,8 @@
 # 🏎️ Neon Kart Chaos
 
-![Neon Kart Chaos](https://neon-kart-chaos-ajsmlvr5z-srisanjai01s-projects.vercel.app/favicon.ico) <!-- You can replace this with a real screenshot! -->
+**[🏎️ PLAY THE GAME LIVE HERE! 🏎️](https://neon-kart-chaos.vercel.app)**
+
+![Neon Kart Chaos](https://neon-kart-chaos.vercel.app/favicon.ico) <!-- You can replace this with a real screenshot! -->
 
 **Neon Kart Chaos** is a fast-paced, fully-playable multiplayer 3D kart racing game built for the browser. 
 
