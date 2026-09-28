@@ -102,9 +102,11 @@ function setupTransportListeners(app: HTMLElement) {
   transport.onMessage((msg) => {
     if (msg.type === 'join') {
       const takenColors = state.players.map(p => p.color);
-      if (takenColors.includes(msg.data.color)) {
-         msg.data.color = PLAYER_COLORS.find(c => !takenColors.includes(c)) || PLAYER_COLORS[0];
+      let assignedColor = msg.data.color;
+      if (!assignedColor || takenColors.includes(assignedColor)) {
+         assignedColor = PLAYER_COLORS.find(c => !takenColors.includes(c)) || PLAYER_COLORS[0];
       }
+      msg.data.color = assignedColor;
       state.addPlayer(msg.clientId, msg.data);
       broadcastState();
       if (state.state === GameState.LOBBY) renderLobby(app);

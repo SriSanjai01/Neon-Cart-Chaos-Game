@@ -241,6 +241,11 @@ export class Renderer {
             addWheel(mesh, -10, 10);
             addWheel(mesh, -10, -10);
 
+            // Add a point light to the kart to illuminate it and the track around it
+            const kartLight = new THREE.PointLight(player.color, 2, 200);
+            kartLight.position.set(0, 20, 0);
+            mesh.add(kartLight);
+
             this.scene.add(mesh);
             this.kartMeshes.set(player.clientId, mesh);
         }
