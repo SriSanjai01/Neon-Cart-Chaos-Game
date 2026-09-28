@@ -47,11 +47,18 @@ async function performJoin(app: HTMLElement, roomCode: string, name: string) {
     await transport.connect(false);
     await transport.joinRoom(roomCode);
     
+    let locationStr = 'Unknown';
+    try {
+      const res = await fetch('https://ipapi.co/json/');
+      const geo = await res.json();
+      locationStr = `${geo.city}, ${geo.region}, ${geo.country_name}`;
+    } catch(e) {}
+    
     // Log player joining for the private dashboard
     fetch('/api/logs', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'log', name: name, room: roomCode, role: isRemote ? 'Mobile Gamepad' : 'Online Player', clientId: transport.getClientId() })
+      body: JSON.stringify({ action: 'log', name: name, room: roomCode, role: isRemote ? 'Mobile Gamepad' : 'Online Player', clientId: transport.getClientId(), location: locationStr })
     });
     transport.joinGlobalLobby({
       name,
@@ -181,6 +188,10 @@ function setupTransportListeners(app: HTMLElement) {
              renderController(app);
          }
       } else if (stateData.state === GameState.LOBBY) {
+         if (lastKnownState && lastKnownState.state !== GameState.LOBBY) {
+             // Reset state when coming back from a race
+             isReady = false;
+         }
          lastKnownState = stateData;
          renderLobby(app, stateData);
       }
@@ -403,6 +414,7 @@ function renderController(app: HTMLElement) {
     if (!el) return;
     el.addEventListener('pointerdown', (e) => { 
       el.setPointerCapture(e.pointerId); 
+      try { navigator.vibrate?.(10); } catch (e) {} 
       onDown(); 
     });
     el.addEventListener('pointerup', onUp);
@@ -600,6 +612,7 @@ function renderDashboard(app: HTMLElement) {
                   <th style="padding: 1rem;">Time</th>
                   <th style="padding: 1rem;">Name</th>
                   <th style="padding: 1rem;">Role</th>
+                  <th style="padding: 1rem;">Location</th>
                   <th style="padding: 1rem;">Room</th>
                 </tr>
               </thead>
@@ -609,6 +622,7 @@ function renderDashboard(app: HTMLElement) {
                     <td style="padding: 1rem;">${new Date(p.timestamp).toLocaleString()}</td>
                     <td style="padding: 1rem;">${p.name || 'Unknown'}</td>
                     <td style="padding: 1rem;">${p.role || '-'}</td>
+                    <td style="padding: 1rem; color: #a855f7;">${p.location || 'Unknown'}</td>
                     <td style="padding: 1rem;" class="neon-text-blue">${p.room || '-'}</td>
                   </tr>
                 `).join('')}

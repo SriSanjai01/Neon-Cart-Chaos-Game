@@ -215,7 +215,7 @@ async function renderLobby(app: HTMLElement) {
       }
 
       state.state = GameState.COUNTDOWN; 
-      state.track = TRACKS[Math.floor(Math.random() * TRACKS.length)];
+      state.track = TRACKS[0];
       broadcastState();
       
       app.innerHTML = `
@@ -334,11 +334,20 @@ function showResults(engine: GameEngine) {
       <div class="glass-panel" style="padding: 2rem; min-width: 400px; display: flex; flex-direction: column; gap: 1rem;">
         ${resHtml}
       </div>
-      <button onclick="location.reload()" class="glass-btn" style="margin-top: 3rem; font-size: 1.5rem; padding: 1rem 2rem;">
+      <button id="btn-new-race" class="glass-btn" style="margin-top: 3rem; font-size: 1.5rem; padding: 1rem 2rem;">
         NEW RACE
       </button>
     </div>
   `;
+
+  document.getElementById('btn-new-race')?.addEventListener('click', () => {
+    state.state = GameState.LOBBY;
+    // keep human players, drop bots, set human players ready = false
+    state.players = state.players.filter(p => !p.isBot);
+    state.players.forEach(p => p.ready = false);
+    broadcastState();
+    renderLobby(app);
+  });
 }
 
 // --- Debug Overlay ---

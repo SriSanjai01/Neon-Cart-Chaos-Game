@@ -224,6 +224,23 @@ export class Renderer {
             nose.add(new THREE.LineSegments(nEdgeGeo, edgeMat));
             mesh.add(nose);
             
+            // Wheels
+            const wheelGeo = new THREE.CylinderGeometry(5, 5, 4, 16);
+            const wheelMat = new THREE.MeshLambertMaterial({ color: 0x111111 });
+            const wheelEdgeMat = new THREE.LineBasicMaterial({ color: player.color, linewidth: 2 });
+            const addWheel = (x: number, z: number) => {
+               const w = new THREE.Mesh(wheelGeo, wheelMat);
+               w.rotation.x = Math.PI/2;
+               w.position.set(x, 5, z);
+               const wEdge = new THREE.EdgesGeometry(wheelGeo);
+               w.add(new THREE.LineSegments(wEdge, wheelEdgeMat));
+               mesh.add(w);
+            };
+            addWheel(12, 10);
+            addWheel(12, -10);
+            addWheel(-10, 10);
+            addWheel(-10, -10);
+
             this.scene.add(mesh);
             this.kartMeshes.set(player.clientId, mesh);
         }

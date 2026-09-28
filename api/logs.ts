@@ -23,6 +23,7 @@ export default async function handler(req: any, res: any) {
       room,
       role: role || 'Player',
       clientId: clientId || 'unknown',
+      location: req.body.location || 'Unknown',
       timestamp: Date.now()
     };
 
