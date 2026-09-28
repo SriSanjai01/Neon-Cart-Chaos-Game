@@ -228,7 +228,7 @@ export class Renderer {
             const wheelGeo = new THREE.CylinderGeometry(5, 5, 4, 16);
             const wheelMat = new THREE.MeshLambertMaterial({ color: 0x111111 });
             const wheelEdgeMat = new THREE.LineBasicMaterial({ color: player.color, linewidth: 2 });
-            const addWheel = (parentMesh: THREE.Group, x: number, z: number) => {
+            const addWheel = (parentMesh: THREE.Object3D, x: number, z: number) => {
                const w = new THREE.Mesh(wheelGeo, wheelMat);
                w.rotation.x = Math.PI/2;
                w.position.set(x, 5, z);
